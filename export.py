@@ -53,7 +53,7 @@ def export_passwords():
     print(KEEPASS_PATH)
 
 
-def _get_password_from_pass(pass_path) -> str:
+def _get_password_from_pass(pass_path: str) -> str:
     """Get the pasword from pass."""
     # [:-1] to remove trailing newline
     return subprocess.check_output(['pass', pass_path]).decode()[:-1]
