@@ -48,7 +48,9 @@ def export_passwords():
             password=password)
 
     db.save(KEEPASS_PATH, password=_get_password_from_pass(KEEPASS_PW))
-    print('Export successful.')
+    if '--print-output-only' not in sys.argv:
+        print('Export successful. Output is:')
+    print(KEEPASS_PATH)
 
 
 def _get_password_from_pass(pass_path) -> str:
