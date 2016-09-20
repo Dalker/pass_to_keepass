@@ -8,6 +8,7 @@ To detect the path of the password storage, it relies on the environment
 variable PASSWORD_STORE_DIR (if set).
 """
 
+import datetime
 import os
 import subprocess
 import sys
@@ -16,7 +17,8 @@ from collections import Generator
 from keepassdb import Database
 
 # the path of the keepass file
-KEEPASS_PATH = os.path.join(os.getcwd(), 'out.kdb')
+KEEPASS_PATH = os.path.join(os.getcwd(), 'out-{}.kdb'.format(
+    datetime.datetime.now().strftime('%Y%m%d-%H%M%S')))
 
 # the location of the password to encrypt the keepass file with in pass
 KEEPASS_PW = 'keepass_pw'
