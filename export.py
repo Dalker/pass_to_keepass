@@ -64,7 +64,7 @@ def _get_group(db: Database, known_groups: dict, pass_path: str) -> Group:
     for subpath in pass_paths:
         full_path += '/' + subpath
         if full_path not in known_groups.keys():
-            known_groups[full_path] = db.create_group(full_path, parent=parent)
+            known_groups[full_path] = db.create_group(subpath, parent=parent)
         parent = known_groups[full_path]
     return known_groups[full_path]
 
