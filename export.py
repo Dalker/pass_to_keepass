@@ -14,7 +14,7 @@ import subprocess
 import sys
 
 from collections import Generator
-from keepassdb import Database
+from keepassdb.db import Database, Group
 
 # the path of the keepass file
 KEEPASS_PATH = os.path.join(os.getcwd(), 'out-{}.kdb'.format(
@@ -37,12 +37,15 @@ def export_passwords():
     export_path = _get_pass_export_path(pass_base_path)
 
     db = Database()
-    group = db.create_group(title='PASS(1)')
+    known_groups = {
+        '': db.create_group('PASS(1)'),
+    }
 
     for full_password_path in _recursive_list_pass_dir(export_path):
         pass_path = full_password_path.replace(pass_base_path, '', 1)
         pass_path = _remove_leading_slash(pass_path)
         password = _get_password_from_pass(pass_path)
+        group = _get_group(db, known_groups, pass_path)
         group.create_entry(
             title=pass_path, url=pass_path, username=pass_path,
             password=password)
@@ -51,6 +54,19 @@ def export_passwords():
     if '--print-output-only' not in sys.argv:
         print('Export successful. Output is:')
     print(KEEPASS_PATH)
+
+
+def _get_group(db: Database, known_groups: dict, pass_path: str) -> Group:
+    """Get or create a group by a pass path."""
+    pass_paths = pass_path.split('/')[:-1]
+    full_path = ''
+    parent = known_groups['']  # base group
+    for subpath in pass_paths:
+        full_path += '/' + subpath
+        if full_path not in known_groups.keys():
+            known_groups[full_path] = db.create_group(full_path, parent=parent)
+        parent = known_groups[full_path]
+    return known_groups[full_path]
 
 
 def _get_password_from_pass(pass_path: str) -> str:
