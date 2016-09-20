@@ -8,6 +8,20 @@ PASS(1) storage.
 To detect the path of the password storage, it relies on the environment
 variable PASSWORD_STORE_DIR (if set).
 
+Requirements
+------------
+
+You will need python 3 as well as the libraries listed in *requirements.txt*.
+
+Usage
+-----
+
+Specify the pass path of the password to use for the keepass database in line 24 as *KEEPASS_PW* (relative to your pass root).
+
+If you do not want to export all of your passwords (i.e. to export the passwords for a single customer or of a single service), you can specify a path (again, relative to your pass root) to export in line 27 as *EXPORT_SUBPATH*. By default, all passwords are exported.
+
+After executing the script, you get a keepass file called *out-$date.kdb* where *$date* is a timestamp of the second when the script was started. This can be opened with KeepassX or older Keepass versions and imported in newer Keepass versions.
+
 License
 -------
 

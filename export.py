@@ -24,7 +24,7 @@ KEEPASS_PATH = os.path.join(os.getcwd(), 'out-{}.kdb'.format(
 KEEPASS_PW = 'keepass_pw'
 
 # the path inside the pass to export (empty means export all)
-EXPORT_SUBPATH = 'subpath-to-export/'
+EXPORT_SUBPATH = ''
 
 
 def export_passwords():
