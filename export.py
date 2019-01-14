@@ -47,7 +47,7 @@ def export_passwords():
         password = _get_password_from_pass(pass_path)
         group = _get_group(db, known_groups, pass_path)
         group.create_entry(
-            title=pass_path, url=pass_path, username=pass_path,
+            title=pass_path, url=pass_path, username=os.path.basename(pass_path),
             password=password)
 
     db.save(KEEPASS_PATH, password=_get_password_from_pass(KEEPASS_PW))
