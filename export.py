@@ -71,8 +71,7 @@ def _get_group(db: Database, known_groups: dict, pass_path: str) -> Group:
 
 def _get_password_from_pass(pass_path: str) -> str:
     """Get the pasword from pass."""
-    # [:-1] to remove trailing newline
-    return subprocess.check_output(['pass', pass_path]).decode()[:-1]
+    return subprocess.check_output(['pass', pass_path]).decode().splitlines()[0]
 
 
 def _recursive_list_pass_dir(base_dir: str) -> Generator:
