@@ -24,7 +24,10 @@ KEEPASS_PATH = os.path.join(os.getcwd(), 'out-{}.kdb'.format(
 KEEPASS_PW = 'keepass_pw'
 
 # the path inside the pass to export (empty means export all)
-EXPORT_SUBPATH = ''
+EXPORT_PASSWORDS = (
+    'example.org/bar',
+    'test/xyz/foobar',
+)
 
 
 def export_passwords():
@@ -34,14 +37,13 @@ def export_passwords():
         sys.exit(1)
 
     pass_base_path = _get_pass_base_path()
-    export_path = _get_pass_export_path(pass_base_path)
 
     db = Database()
     known_groups = {
         '': db.create_group('PASS(1)'),
     }
 
-    for full_password_path in _recursive_list_pass_dir(export_path):
+    for full_password_path in EXPORT_PASSWORDS:
         pass_path = full_password_path.replace(pass_base_path, '', 1)
         pass_path = _remove_leading_slash(pass_path)
         password = _get_password_from_pass(pass_path)
@@ -74,24 +76,11 @@ def _get_password_from_pass(pass_path: str) -> str:
     return subprocess.check_output(['pass', pass_path]).decode().splitlines()[0]
 
 
-def _recursive_list_pass_dir(base_dir: str) -> Generator:
-    """List a directory recursively."""
-    for path, dirs, files in os.walk(base_dir):
-        for file in files:
-            if file[-4:] != '.gpg':
-                continue
-            yield os.path.join(path, file[:-4])
-
 
 def _get_pass_base_path() -> str:
     """Get the path of the password store."""
     return os.environ.get('PASSWORD_STORE_DIR', os.path.expanduser(
         '~/.password-store'))
-
-
-def _get_pass_export_path(base_path: str) -> str:
-    """Get the export path."""
-    return os.path.join(base_path, EXPORT_SUBPATH)
 
 
 def _remove_leading_slash(string: str) -> str:
