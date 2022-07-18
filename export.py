@@ -13,8 +13,8 @@ import os
 import subprocess
 import sys
 
-from collections import Generator
-from keepassdb.db import Database, Group
+# from keepassdb.db import Database, Group
+from pykeepass import PyKeePass
 
 # the path of the keepass file
 KEEPASS_PATH = os.path.join(os.getcwd(), 'out-{}.kdb'.format(
@@ -25,8 +25,8 @@ KEEPASS_PW = 'keepass_pw'
 
 # the path inside the pass to export (empty means export all)
 EXPORT_PASSWORDS = (
-    'example.org/bar',
-    'test/xyz/foobar',
+    # 'example.org/bar',
+    # 'test/xyz/foobar',
 )
 
 
@@ -38,27 +38,30 @@ def export_passwords():
 
     pass_base_path = _get_pass_base_path()
 
-    db = Database()
-    known_groups = {
-        '': db.create_group('PASS(1)'),
-    }
+    # db = Database()
+    # known_groups = {
+    #     '': db.create_group('PASS(1)'),
+    # }
 
     for full_password_path in EXPORT_PASSWORDS:
         pass_path = full_password_path.replace(pass_base_path, '', 1)
         pass_path = _remove_leading_slash(pass_path)
         password = _get_password_from_pass(pass_path)
-        group = _get_group(db, known_groups, pass_path)
-        group.create_entry(
-            title=pass_path, url=pass_path.split('/')[0], username=os.path.basename(pass_path),
-            password=password)
+        # group = _get_group(db, known_groups, pass_path)
+        # group.create_entry(
+        #     title=pass_path, url=pass_path.split('/')[0], username=os.path.basename(pass_path),
+        #     password=password)
 
-    db.save(KEEPASS_PATH, password=_get_password_from_pass(KEEPASS_PW))
+    # db.save(KEEPASS_PATH, password=_get_password_from_pass(KEEPASS_PW))
     if '--print-output-only' not in sys.argv:
         print('Export successful. Output is:')
     print(KEEPASS_PATH)
 
 
-def _get_group(db: Database, known_groups: dict, pass_path: str) -> Group:
+def _get_group(db
+               # : Database
+               , known_groups: dict, pass_path: str):
+               # -> Group:
     """Get or create a group by a pass path."""
     pass_paths = pass_path.split('/')[:-1]
     full_path = ''
